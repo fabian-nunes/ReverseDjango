@@ -15,15 +15,22 @@ class UserID:
 
 
 def index(request):
-    user_obj = request.COOKIES.get('uuid')
-    if user_obj is None:
-        msg = "Seems like you didn't have a cookie. No worries! I'll set one now!"
-        response = HttpResponse(msg)
-        user_obj = UserID()
-        user_obj = jsonpickle.dumps(user_obj)
-        b64 = b64encode(user_obj.encode('utf-8')).decode('utf-8')
-        response.set_cookie('uuid', b64)
-        return response
+    if request.method == "GET":
+        user_obj = request.COOKIES.get('uuid')
+        if user_obj is None:
+            msg = "Seems like you didn't have a cookie. No worries! I'll set one now!"
+            response = HttpResponse(msg)
+            user_obj = UserID()
+            user_obj = jsonpickle.dumps(user_obj)
+            b64 = b64encode(user_obj.encode('utf-8')).decode('utf-8')
+            response.set_cookie('uuid', b64)
+            return response
+        else:
+            user_obj = jsonpickle.decode(b64decode(user_obj))
+            return HttpResponse("Hey there! {}!".format(user_obj.uuid))
+    elif request.method == "POST":
+        data = request.POST.get('data')
+        data = jsonpickle.decode(b64decode(data))
+        return HttpResponse("Hey there! {}!".format(data.uuid))
     else:
-        user_obj = jsonpickle.decode(b64decode(user_obj))
-        return HttpResponse("Hey there! {}!".format(user_obj.uuid))
+        return HttpResponse("Method not allowed!")
