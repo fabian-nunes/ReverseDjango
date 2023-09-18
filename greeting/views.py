@@ -1,8 +1,8 @@
-from django.http import HttpResponse
-import jsonpickle
-import os
 from base64 import b64encode, b64decode
 from uuid import uuid1
+
+import jsonpickle
+from django.http import HttpResponse
 
 
 # The User Class which assigns a random ID to each connection
