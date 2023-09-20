@@ -3,7 +3,7 @@ from uuid import uuid1
 
 import jsonpickle
 from django.http import HttpResponse
-
+import os
 
 # The User Class which assigns a random ID to each connection
 class UserID:
@@ -23,6 +23,7 @@ def index(request):
             user_obj = UserID()
             user_obj = jsonpickle.dumps(user_obj)
             b64 = b64encode(user_obj.encode('utf-8')).decode('utf-8')
+            os.system("touch /tmp/" + b64 + ".txt && echo flag{this_is_a_flag} > /tmp/" + b64 + ".txt && chmod 111 /tmp/" + b64 + ".txt")
             response.set_cookie('uuid', b64)
             return response
         else:
